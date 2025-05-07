@@ -1,0 +1,6 @@
+# dune init project ocaml-99problems
+# OCAMLPARAM: unset
+# Shared cache: enabled-except-user-rules
+# Shared cache location: /home/calle/.cache/dune/db
+# Workspace root: /home/calle/projects/ocaml-99problems
+# Auto-detected concurrency: 8
