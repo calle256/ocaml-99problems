@@ -52,20 +52,5 @@ type 'a node =
   | Many of 'a node list
 
 
-let flatten list = 
-  let rec aux acc = function 
-    | [] -> acc
-    | One x :: t -> aux (x :: acc) t
-    | Many l :: t -> aux (aux acc l) t 
-  in
-  List.rev(aux [] list)
-
-let compress list = 
-  let rec aux acc = function
-    | [] -> acc 
-    | x :: xs -> if List.mem x acc then (aux acc xs) else (aux (x :: acc) xs)
-  in 
-  aux [] list
-
 let () = 
   print_endline "hello world!"
