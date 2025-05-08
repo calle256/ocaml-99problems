@@ -62,10 +62,16 @@ let flatten list =
 
 let compress list = 
   let rec aux acc = function
-    | [] -> acc 
-    | x :: xs -> if List.mem x acc then (aux acc xs) else (aux (x :: acc) xs)
+    | [] -> acc
+    | [x] -> x :: acc 
+    | x :: y :: xs -> if x = y then (aux acc (y :: xs)) else (aux (x :: acc) (y :: xs))
   in 
-  aux [] list
+  List.rev (aux [] list)
+
+let pack (lst: 'a list): 'a list list = 
+  let rec aux acc = function 
+    | [] -> acc 
+    | [x] -> 
 
 let () = 
   print_endline "hello world!"
