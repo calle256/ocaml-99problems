@@ -69,10 +69,41 @@ let compress list =
   List.rev (aux [] list)
 
 let pack (lst: 'a list): 'a list list = 
-  let rec aux acc n = function 
-    | []  -> acc 
-    | [x] -> (x, n+1) :: acc
-    | x :: y :: xs -> if x = y then (aux acc (y :: xs)) n + 1 else (aux acc ())
+  let rec aux acc curr = function 
+    | []  -> [[]] 
+    | [x] ->  (x :: curr) :: acc
+    | x :: (y :: _ as t) -> 
+        if x = y then aux acc (y :: curr) t  
+        else aux ((x :: curr) :: acc) [] t
+  in
+  aux [] [] lst
 
+let encode (lst: 'a list): ('a * int) list =  
+  let rec aux curr acc = function
+    | [] -> []
+    | [x] -> (x, curr+1) :: acc
+    | x :: (y :: _ as t) -> 
+        if x = y then aux (curr + 1) acc t 
+        else aux 0 ((x, curr+1) :: acc) t
+    in List.rev (aux 0 [] lst)
+
+type 'a rle = 
+  | One of 'a 
+  | Many of int * 'a
+
+let encode2 (lst: 'a list): 'a rle list = 
+  let rec aux curr acc = function
+    | [] -> []
+    | [x] -> 
+        if curr = 0 then One x :: acc 
+        else Many (curr+1, x) :: acc      
+    | x :: (y :: _ as t) -> 
+        if x = y then aux (curr + 1) acc t 
+        else if curr = 0 then aux 0 (One x :: acc) t
+        else aux 0 (Many (curr+1, x) :: acc) t
+    in List.rev (aux 0 [] lst)
+
+
+   
 let () = 
-  print_endline "hello world!"
+  print_endline "hello" 
