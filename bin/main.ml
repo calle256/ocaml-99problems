@@ -103,7 +103,32 @@ let encode2 (lst: 'a list): 'a rle list =
         else aux 0 (Many (curr+1, x) :: acc) t
     in List.rev (aux 0 [] lst)
 
+let rec decode_single (vl: 'a rle):  'a list = 
+  match vl with
+  | One x -> [x]
+  | Many (0, x) -> [x]
+  | Many (n, x) -> x :: decode_single (Many (n-1, x))
 
-   
+let rec decode (lst: 'a rle list): 'a list =
+  match lst with 
+  | [] -> []
+  | x :: xs -> decode_single x @ decode xs
+
+let rec duplicate (lst: 'a list): 'a list = 
+  match lst with
+  | [] -> []
+  | x :: xs -> x :: (x :: duplicate xs)
+
+
+let rec replicate_single (v: 'a) (n: int): 'a list = 
+  match (v, n) with 
+  | (_, 0) -> [] 
+  | (x, num) -> x :: (replicate_single x (num-1))
+
+let rec replicate (lst: 'a list) (n: int): 'a list = 
+  match lst with 
+  | [] -> []
+  | x :: xs -> (replicate_single x n) @ (replicate xs n)
+
 let () = 
   print_endline "hello" 
