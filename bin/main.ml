@@ -69,9 +69,10 @@ let compress list =
   List.rev (aux [] list)
 
 let pack (lst: 'a list): 'a list list = 
-  let rec aux acc = function 
-    | [] -> acc 
-    | [x] -> 
+  let rec aux acc n = function 
+    | []  -> acc 
+    | [x] -> (x, n+1) :: acc
+    | x :: y :: xs -> if x = y then (aux acc (y :: xs)) n + 1 else (aux acc ())
 
 let () = 
   print_endline "hello world!"
