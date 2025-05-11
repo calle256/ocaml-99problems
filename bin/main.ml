@@ -130,5 +130,24 @@ let rec replicate (lst: 'a list) (n: int): 'a list =
   | [] -> []
   | x :: xs -> (replicate_single x n) @ (replicate xs n)
 
+let drop (lst: 'a list) (n: int): 'a list = 
+  let rec aux num = function 
+    | [] -> []
+    | x :: xs -> if num = 1 then (aux n xs) else x :: (aux (num-1) xs)
+  in aux n lst
+
+let split (lst: 'a list) (num: int): 'a list * 'a list = 
+  let rec aux acc n= function 
+    | [] -> (List.rev acc, [])
+    | x :: xs -> if n = 0 then (List.rev acc, xs) else aux (x :: acc) (n-1) xs
+  in aux [] num lst
+
+let rec slice (lst: 'a list) (n1: int) (n2: int): 'a list = 
+  match (lst, n1, n2) with 
+  | ([], _, _) -> []
+  | (x :: xs, 0, t) -> x :: (slice xs 0 (t-1))
+  | (_, _, 0) ->  []
+  | (_ :: xs, u, t) -> (slice xs (u-1) (t-1))
+
 let () = 
   print_endline "hello" 
