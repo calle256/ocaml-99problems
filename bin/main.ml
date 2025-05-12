@@ -139,7 +139,7 @@ let drop (lst: 'a list) (n: int): 'a list =
 let split (lst: 'a list) (num: int): 'a list * 'a list = 
   let rec aux acc n= function 
     | [] -> (List.rev acc, [])
-    | x :: xs -> if n = 0 then (List.rev acc, xs) else aux (x :: acc) (n-1) xs
+    | x :: xs -> if n = 0 then (List.rev acc, x :: xs) else aux (x :: acc) (n-1) xs
   in aux [] num lst
 
 let rec slice (lst: 'a list) (n1: int) (n2: int): 'a list = 
@@ -149,5 +149,28 @@ let rec slice (lst: 'a list) (n1: int) (n2: int): 'a list =
   | (_, _, 0) ->  []
   | (_ :: xs, u, t) -> (slice xs (u-1) (t-1))
 
-let () = 
-  print_endline "hello" 
+let rotate (lst: 'a list) (n: int) : 'a list = 
+  let (fst, snd) = split lst n in 
+    snd @ fst
+
+let rec remove_at num lst = 
+  match (num, lst) with 
+  | (0, _ :: xs) -> xs 
+  | (_, []) -> []
+  | (n, x :: xs) -> x :: (remove_at (n-1) xs)
+
+let rec insert_at vl n lst = 
+  match (n, lst) with 
+  | (0, xs) -> vl :: xs 
+  | (_, []) -> []
+  | (n, x ::xs) -> x :: insert_at vl (n-1) xs
+
+let rec range fst lst = 
+  if fst <= lst then fst :: range (fst+1) lst else []
+
+
+let rec rand_list n high = 
+  Random.init 0; 
+  match n with 
+  | 0 -> []
+  | n -> (Random.int n) :: rand_list (n-1) high
