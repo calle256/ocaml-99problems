@@ -168,9 +168,22 @@ let rec insert_at vl n lst =
 let rec range fst lst = 
   if fst <= lst then fst :: range (fst+1) lst else []
 
-
-let rec rand_list n high = 
+let rand_select list n = 
   Random.init 0; 
-  match n with 
-  | 0 -> []
-  | n -> (Random.int n) :: rand_list (n-1) high
+  let rec extract acc n = function 
+    | [] -> raise Not_found
+    | h :: t -> if n = 0 then (h, acc @ t) else extract (h :: acc ) (n-1) t 
+  in
+  let extract_rand list len = 
+    extract [] (Random.int len) list 
+  in
+  let rec aux n acc list len =  
+    if n = 0 then acc else 
+      let picked, rest = extract_rand list len in 
+      aux (n-1) (picked :: acc) rest (len-1)
+  in
+  let len = List.length list in 
+    aux (min n len) [] list len
+
+let lotto_select count r = 
+  rand_select (range 0 r) count
